@@ -5,20 +5,38 @@ const books = require('./datas');
 
 const addBook = (request, h) => {
     const {
- name, year, author, summary, publisher, pageCount, readPage, reading, 
-} = request.payload;
+        name,
+        year,
+        author,
+        summary,
+        publisher,
+        pageCount,
+        readPage,
+        reading,
+    } = request.payload;
     const id = nanoid(16);
     const insertedAt = new Date().toISOString();
     const updatedAt = insertedAt;
     const finished = pageCount === readPage ? true : false;
-    
+
     const newBook = {
-        id, name, year, author, summary, publisher, pageCount, readPage, finished, reading, insertedAt, updatedAt,
+        id,
+        name,
+        year,
+        author,
+        summary,
+        publisher,
+        pageCount,
+        readPage,
+        finished,
+        reading,
+        insertedAt,
+        updatedAt,
     };
 
     if (!name) {
         const response = h.response({
-            status: 'fail', 
+            status: 'fail',
             message: 'Gagal menambahkan buku. Mohon isi nama buku',
         });
         response.code(400);
@@ -26,7 +44,7 @@ const addBook = (request, h) => {
     }
     if (readPage > pageCount) {
         const response = h.response({
-            status: 'fail', 
+            status: 'fail',
             message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
         });
         response.code(400);
@@ -40,7 +58,7 @@ const addBook = (request, h) => {
     if (isSuccess) {
         const response = h.response({
             status: 'success',
-            message: 'Buku berhasil ditambahkan', 
+            message: 'Buku berhasil ditambahkan',
             data: {
                 bookId: id,
             },
@@ -59,9 +77,8 @@ const addBook = (request, h) => {
 
 // Show all books + Search by name, reading, finished
 const getAllbooks = (request, h) => {
-    const { name, reading, finished } = request.query;
-    if (!name && !reading && !finished) {
-        return ({
+    if (request.query === '') {
+        const response = h.response({
             status: 'success',
             data: {
                 books: books.map((book) => ({
@@ -71,54 +88,31 @@ const getAllbooks = (request, h) => {
                 })),
             },
         });
-    }
-    if (name !== undefined) {
-        const datas = books.filter((book) => book.name === name); 
-        if (datas !== []) {
-            const response = h.response({
-                status: 'success',
-                data: {
-                    books: datas.map((book) => ({
-                        id: book.id,
-                        name: book.name,
-                        publisher: book.publisher,
-                    })),
-                },
-            });
-            response.code(200);
-            return response;
-        } else {
-            const response = h.response({
-                status: 'fail',
-                message: 'Buku tidak ditemukan',
-            });
-            response.code(404);
-            return response;
-        }
-    } else {
-        const response = h.response({
-            status: 'fail',
-            message: 'Buku tidak ditemukan',
-        });
-        response.code(404);
+        response.code(200);
         return response;
     }
+    // const { name, reading, finished } = request.query;
+    // if (name !== '' && reading === undefined && finished === undefined) {
+    //     const datas = books.filter((book) => book.name === name);
+    //     const response = h.response({
+    //         status: 'success',
+    //         data: {
+    //             books: datas.map((book) => ({
+    //                 id: book.id,
+    //                 name: book.name,
+    //                 publisher: book.publisher,
+    //             })),
+    //         },
+    //     });
+    //     response.code(200);
+    //     return response;
+    // }
 };
-// const getAllbooks = () => ({
-//     status: 'success',
-//     data: {
-//         books: books.map((book) => ({
-//             id: book.id,
-//             name: book.name,
-//             publisher: book.publisher,
-//         })),
-//     },
-// });
 
 // get book detail
 const getBookDetail = (request, h) => {
     const { id } = request.params;
-    const data = books.filter((book) => book.id === id)[0]; 
+    const data = books.filter((book) => book.id === id)[0];
     if (data === undefined) {
         const response = h.response({
             status: 'fail',
@@ -132,7 +126,7 @@ const getBookDetail = (request, h) => {
         data: {
             book: data,
         },
-    }); 
+    });
     response.code(200);
     return response;
 };
@@ -141,8 +135,15 @@ const getBookDetail = (request, h) => {
 const editBook = (request, h) => {
     const { id } = request.params;
     const index = books.findIndex((book) => book.id === id);
-    const { 
-        name, year, author, summary, publisher, pageCount, readPage, reading, 
+    const {
+        name,
+        year,
+        author,
+        summary,
+        publisher,
+        pageCount,
+        readPage,
+        reading,
     } = request.payload;
 
     if (index !== -1) {
@@ -154,7 +155,7 @@ const editBook = (request, h) => {
             response.code(400);
             return response;
         }
-    
+
         if (readPage > pageCount) {
             const response = h.response({
                 status: 'fail',
@@ -211,6 +212,10 @@ const deleteBook = (request, h) => {
     }
 };
 
-module.exports = { 
-    addBook, getAllbooks, getBookDetail, editBook, deleteBook,
- };
+module.exports = {
+    addBook,
+    getAllbooks,
+    getBookDetail,
+    editBook,
+    deleteBook,
+};

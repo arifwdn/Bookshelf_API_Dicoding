@@ -1,10 +1,13 @@
-const { 
-    addBook, getAllbooks, getBookDetail, editBook, deleteBook, 
- } = require('./handlers');
+const {
+    addBook,
+    getBookDetail,
+    editBook,
+    deleteBook,
+    getAllbooks,
+} = require('./handlers');
 
-const routes = [
-    {
-        method: 'POST', 
+const routes = [{
+        method: 'POST',
         path: '/books',
         handler: addBook,
     },
