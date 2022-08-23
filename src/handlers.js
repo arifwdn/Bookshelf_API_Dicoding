@@ -76,18 +76,71 @@ const addBook = (request, h) => {
 };
 
 // Show all books + Search by name, reading, finished
-
-const getAllbooks = () => ({
-    status: 'success',
-    data: {
-        books: books.map((book) => ({
-            id: book.id,
-            name: book.name,
-            publisher: book.publisher,
-        })),
-    },
-});
-
+const getAllbooks = (request, h) => {
+    const { name, reading, finished } = request.query;
+    const dataName = books.filter((book) => book.name === name);
+    const read = reading === 1 ? true : false;
+    const dataReading = books.filter((book) => book.reading === read);
+    const finish = finished === 1 ? true : false;
+    const dataFinished = books.filter((book) => book.finished === finish);
+    if (dataName.length !== 0) {
+        const response = h.response({
+            status: 'success',
+            message: 'berdasarkan name',
+            data: {
+                books: dataName.map((book) => ({
+                    id: book.id,
+                    name: book.name,
+                    publisher: book.publisher,
+                })),
+            },
+        });
+        response.code(200);
+        return response;
+    } else if (dataReading.length !== 0) {
+        const response = h.response({
+            status: 'success',
+            message: 'berdasarkan reading',
+            data: {
+                books: dataReading.map((book) => ({
+                    id: book.id,
+                    name: book.name,
+                    publisher: book.publisher,
+                })),
+            },
+        });
+        response.code(200);
+        return response;
+    } else if (dataFinished.length !== 0) {
+        const response = h.response({
+            status: 'success',
+            message: 'berdasarkan finished',
+            data: {
+                books: dataFinished.map((book) => ({
+                    id: book.id,
+                    name: book.name,
+                    publisher: book.publisher,
+                })),
+            },
+        });
+        response.code(200);
+        return response;
+    } else {
+        const response = h.response({
+            status: 'success',
+            message: 'cari semua data',
+            data: {
+                books: books.map((book) => ({
+                    id: book.id,
+                    name: book.name,
+                    publisher: book.publisher,
+                })),
+            },
+        });
+        response.code(200);
+        return response;
+    }
+};
 
 // get book detail
 const getBookDetail = (request, h) => {
