@@ -58,9 +58,14 @@ const addBook = (request, h) => {
 };
 
 // Show all books + Search by name, reading, finished
-const getAllbooks = (request, h) => {
+const getAllbooks = (request) => {
     const { name, reading, finished } = request.query;
-    if (!name && !reading && !finished) {
+    const dataByName = books.filter((book) => book.name === name);
+    const read = reading === 1 ? true : false;
+    const dataByReading = books.filter((book) => book.reading === read);
+    const finish = finished === 1 ? true : false;
+    const dataByFinished = books.filter((book) => book.finished === finish);
+    if (dataByName !== [] && dataByReading !== [] && dataByFinished !== []) {
         return ({
             status: 'success',
             data: {
@@ -72,49 +77,43 @@ const getAllbooks = (request, h) => {
             },
         });
     }
-    if (name !== undefined) {
-        const datas = books.filter((book) => book.name === name); 
-        if (datas !== []) {
-            const response = h.response({
-                status: 'success',
-                data: {
-                    books: datas.map((book) => ({
-                        id: book.id,
-                        name: book.name,
-                        publisher: book.publisher,
-                    })),
-                },
-            });
-            response.code(200);
-            return response;
-        } else {
-            const response = h.response({
-                status: 'fail',
-                message: 'Buku tidak ditemukan',
-            });
-            response.code(404);
-            return response;
-        }
-    } else {
-        const response = h.response({
-            status: 'fail',
-            message: 'Buku tidak ditemukan',
+    if (dataByName !== '') {
+        return ({
+            status: 'success',
+            data: {
+                books: dataByName.map((book) => ({
+                    id: book.id,
+                    name: book.name,
+                    publisher: book.publisher,
+                })),
+            },
         });
-        response.code(404);
-        return response;
+    }
+    if (dataByReading !== '') {
+        return ({
+            status: 'success',
+            data: {
+                books: dataByReading.map((book) => ({
+                    id: book.id,
+                    name: book.name,
+                    publisher: book.publisher,
+                })),
+            },
+        });
+    }
+    if (dataByFinished !== '') {
+        return ({
+            status: 'success',
+            data: {
+                books: dataByFinished.map((book) => ({
+                    id: book.id,
+                    name: book.name,
+                    publisher: book.publisher,
+                })),
+            },
+        });
     }
 };
-// const getAllbooks = () => ({
-//     status: 'success',
-//     data: {
-//         books: books.map((book) => ({
-//             id: book.id,
-//             name: book.name,
-//             publisher: book.publisher,
-//         })),
-//     },
-// });
-
 // get book detail
 const getBookDetail = (request, h) => {
     const { id } = request.params;
