@@ -76,38 +76,18 @@ const addBook = (request, h) => {
 };
 
 // Show all books + Search by name, reading, finished
-const getAllbooks = (request, h) => {
-    if (request.query === '') {
-        const response = h.response({
-            status: 'success',
-            data: {
-                books: books.map((book) => ({
-                    id: book.id,
-                    name: book.name,
-                    publisher: book.publisher,
-                })),
-            },
-        });
-        response.code(200);
-        return response;
-    }
-    // const { name, reading, finished } = request.query;
-    // if (name !== '' && reading === undefined && finished === undefined) {
-    //     const datas = books.filter((book) => book.name === name);
-    //     const response = h.response({
-    //         status: 'success',
-    //         data: {
-    //             books: datas.map((book) => ({
-    //                 id: book.id,
-    //                 name: book.name,
-    //                 publisher: book.publisher,
-    //             })),
-    //         },
-    //     });
-    //     response.code(200);
-    //     return response;
-    // }
-};
+
+const getAllbooks = () => ({
+    status: 'success',
+    data: {
+        books: books.map((book) => ({
+            id: book.id,
+            name: book.name,
+            publisher: book.publisher,
+        })),
+    },
+});
+
 
 // get book detail
 const getBookDetail = (request, h) => {
