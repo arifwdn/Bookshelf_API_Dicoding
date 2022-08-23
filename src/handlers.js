@@ -65,19 +65,7 @@ const getAllbooks = (request) => {
     const dataByReading = books.filter((book) => book.reading === read);
     const finish = finished === 1 ? true : false;
     const dataByFinished = books.filter((book) => book.finished === finish);
-    if (dataByName !== [] && dataByReading !== [] && dataByFinished !== []) {
-        return ({
-            status: 'success',
-            data: {
-                books: books.map((book) => ({
-                    id: book.id,
-                    name: book.name,
-                    publisher: book.publisher,
-                })),
-            },
-        });
-    }
-    if (dataByName !== '') {
+    if (dataByName.length > 0) {
         return ({
             status: 'success',
             data: {
@@ -88,8 +76,7 @@ const getAllbooks = (request) => {
                 })),
             },
         });
-    }
-    if (dataByReading !== '') {
+    } else if (dataByReading.length > 0) {
         return ({
             status: 'success',
             data: {
@@ -100,12 +87,22 @@ const getAllbooks = (request) => {
                 })),
             },
         });
-    }
-    if (dataByFinished !== '') {
+    } else if (dataByFinished.length > 0) {
         return ({
             status: 'success',
             data: {
                 books: dataByFinished.map((book) => ({
+                    id: book.id,
+                    name: book.name,
+                    publisher: book.publisher,
+                })),
+            },
+        });
+    } else {
+        return ({
+            status: 'success',
+            data: {
+                books: books.map((book) => ({
                     id: book.id,
                     name: book.name,
                     publisher: book.publisher,
