@@ -58,62 +58,16 @@ const addBook = (request, h) => {
 };
 
 // Show all books + Search by name, reading, finished
-const getAllbooks = (request, h) => {
-    const { name, reading, finished } = request.query;
-    if (!name && !reading && !finished) {
-        return ({
-            status: 'success',
-            data: {
-                books: books.map((book) => ({
-                    id: book.id,
-                    name: book.name,
-                    publisher: book.publisher,
-                })),
-            },
-        });
-    }
-    if (name !== undefined) {
-        const datas = books.filter((book) => book.name === name); 
-        if (datas !== []) {
-            const response = h.response({
-                status: 'success',
-                data: {
-                    books: datas.map((book) => ({
-                        id: book.id,
-                        name: book.name,
-                        publisher: book.publisher,
-                    })),
-                },
-            });
-            response.code(200);
-            return response;
-        } else {
-            const response = h.response({
-                status: 'fail',
-                message: 'Buku tidak ditemukan',
-            });
-            response.code(404);
-            return response;
-        }
-    } else {
-        const response = h.response({
-            status: 'fail',
-            message: 'Buku tidak ditemukan',
-        });
-        response.code(404);
-        return response;
-    }
-};
-// const getAllbooks = () => ({
-//     status: 'success',
-//     data: {
-//         books: books.map((book) => ({
-//             id: book.id,
-//             name: book.name,
-//             publisher: book.publisher,
-//         })),
-//     },
-// });
+const getAllbooks = () => ({
+    status: 'success',
+    data: {
+        books: books.map((book) => ({
+            id: book.id,
+            name: book.name,
+            publisher: book.publisher,
+        })),
+    },
+});
 
 // get book detail
 const getBookDetail = (request, h) => {
